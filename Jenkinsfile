@@ -46,9 +46,9 @@ pipeline {
                      withCredentials([sshUserPrivateKey(credentialsId: 'laptop-ec2-key', keyFileVariable: 'EC2_PRIVATE_KEY_PATH')]) {
                          def workspacePath = pwd()
                         
-                        powershell "scp -i \"$env:EC2_PRIVATE_KEY_PATH\" '${workspacePath}/docker-compose-deploy.yml' ubuntu@ec2-3-134-109-237.us-east-2.compute.amazonaws.com:/home/ubuntu/itec4299finalproject/"
+                        powershell "scp -i \"$EC2_PRIVATE_KEY_PATH\" '${workspacePath}/docker-compose-deploy.yml' ubuntu@ec2-3-134-109-237.us-east-2.compute.amazonaws.com:/home/ubuntu/itec4299finalproject/"
                 
-                        powershell "ssh -i \"$env:EC2_PRIVATE_KEY_PATH\" ubuntu@ec2-3-134-109-237.us-east-2.compute.amazonaws.com \"cd /home/ubuntu/itec4299finalproject/ && docker-compose -f docker-compose-deploy.yml pull && docker-compose -f docker-compose-deploy.yml up -d --remove-orphans\""
+                        powershell "ssh -i \"$EC2_PRIVATE_KEY_PATH\" ubuntu@ec2-3-134-109-237.us-east-2.compute.amazonaws.com \"cd /home/ubuntu/itec4299finalproject/ && docker-compose -f docker-compose-deploy.yml pull && docker-compose -f docker-compose-deploy.yml up -d --remove-orphans\""
             
                 }
             }
