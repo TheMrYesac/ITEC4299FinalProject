@@ -42,25 +42,25 @@ pipeline {
 
         stage('Deploy to AWS EC2') {
             steps {
-                sshPublisher(publishers: [
-                    sshPublisherEntry(
-                        configName: 'ITEC4299FinalProject', 
-                        transfers: [
-                            sshTransfer(
-                                sourceFiles: 'docker-compose-deploy.yml',
-                                removePrefix: '',
-                                remoteDirectory: '/home/${APP_EC2_USER}/ITEC4299FINALPROJECT/',
-                                execCommand: '''
-                                    cd /home/${APP_EC2_USER}/ITEC4299FINALPROJECT/
-                                    docker-compose -f docker-compose-deploy.yml pull
-                                    docker-compose -f docker-compose-deploy.yml down -v --remove-orphans
-                                    docker-compose -f docker-compose-deploy.yml up -d
-                                    docker image prune -f
-                                '''
-                            )
-                        ]
-                    )
-                ])
+                script{
+                     withCredentials([sshUserPrivateKey(credentialsId: 'laptop-ec2-key', keyFileVariable: 'EC2_PRIVATE_KEY_PATH')]) {
+                        bat """
+                            # Ensure the remote directory exists
+                            ssh -i ${EC2_PRIVATE_KEY_PATH} ${APP_EC2_USER}@${APP_EC2_HOST} "mkdir -p /home/${APP_EC2_USER}/ITEC4299FINALPROJECT/"
+
+                            # Transfer docker-compose-deploy.yml to the EC2 instance
+                            scp -i ${EC2_PRIVATE_KEY_PATH} docker-compose-deploy.yml ${APP_EC2_USER}@${APP_EC2_HOST}:/home/${APP_EC2_USER}/ITEC4299FINALPROJECT/
+
+                            # Execute remote commands for deployment
+                            ssh -i ${EC2_PRIVATE_KEY_PATH} ${APP_EC2_USER}@${APP_EC2_HOST} << EOF
+                                cd /home/${APP_EC2_USER}/ITEC4299FINALPROJECT/
+                                docker-compose -f docker-compose-deploy.yml pull
+                                docker-compose -f docker-compose-deploy.yml down -v --remove-orphans
+                                docker-compose -f docker-compose-deploy.yml up -d
+                                docker image prune -f
+                            EOF
+                        """
+                }
             }
         }
     }
