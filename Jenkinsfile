@@ -44,7 +44,11 @@ pipeline {
             steps {
                 script{
                      withCredentials([sshUserPrivateKey(credentialsId: 'laptop-ec2-key', keyFileVariable: 'EC2_PRIVATE_KEY_PATH')]) {
-                        bat """
+                        sh """
+                            mkdir -p ~/.ssh
+                            ssh-keyscan -H ${APP_EC2_HOST} >> ~/.ssh/known_hosts 2>/dev/null
+                            chmod 600 ~/.ssh/known_hosts
+                            
                             # Ensure the remote directory exists
                             ssh -i ${EC2_PRIVATE_KEY_PATH} ${APP_EC2_USER}@${APP_EC2_HOST} "mkdir -p /home/${APP_EC2_USER}/ITEC4299FINALPROJECT/"
 
