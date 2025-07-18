@@ -45,9 +45,9 @@ pipeline {
                 script{
                      withCredentials([sshUserPrivateKey(credentialsId: 'laptop-ec2-key', keyFileVariable: 'EC2_PRIVATE_KEY_PATH')]) {
                         
-                        powershell "scp -i $env:EC2_PRIVATE_KEY_PATH C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\ITEC4299 Final Project\\docker-compose.prod.yml ubuntu@your_ec2_ip:/home/ubuntu/your_app/"
+                        powershell "scp -i $env:EC2_PRIVATE_KEY_PATH '$PWD/docker-compose.prod.yml' ubuntu@ec2-3-134-109-237.us-east-2.compute.amazonaws.com:/home/ubuntu/itec4299finalproject/"
                 
-                        powershell "ssh -i $env:EC2_PRIVATE_KEY_PATH ubuntu@your_ec2_ip \"cd /home/ubuntu/your_app/ && docker-compose -f docker-compose.prod.yml pull && docker-compose -f docker-compose.prod.yml up -d --remove-orphans\""
+                        powershell "ssh -i $env:EC2_PRIVATE_KEY_PATH ubuntu@ec2-3-134-109-237.us-east-2.compute.amazonaws.com \"cd /home/ubuntu/itec4299finalproject/ && docker-compose -f docker-compose-deploy.yml pull && docker-compose -f docker-compose-deploy.yml up -d --remove-orphans\""
             
                 }
             }
