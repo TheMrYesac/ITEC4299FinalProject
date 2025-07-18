@@ -20,9 +20,9 @@ pipeline {
             steps {
                 script {
                     // Build app image
-                    sh "docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}-app:latest -f Dockerfile ."
+                    bat "docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}-app:latest -f Dockerfile ."
                     // Build proxy image
-                    sh "docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}-proxy:latest -f proxy/Dockerfile proxy/"
+                    bat "docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}-proxy:latest -f proxy/Dockerfile proxy/"
                 }
             }
         }
@@ -32,9 +32,9 @@ pipeline {
                 script {
                     // Authenticate with Docker Hub/ECR
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                        sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
-                        sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}-app:latest"
-                        sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}-proxy:latest"
+                        bat "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
+                        bat "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}-app:latest"
+                        bat "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}-proxy:latest"
                     }
                 }
             }
