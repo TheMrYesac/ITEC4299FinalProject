@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_REGISTRY = 'TheMrYesac'
-        IMAGE_NAME = 'ITEC4299FinalProject'
+        DOCKER_REGISTRY = 'themryesac'
+        IMAGE_NAME = 'itec4299finalproject'
         APP_EC2_USER = 'ubuntu'
         APP_EC2_HOST = 'ec2-3-134-109-237.us-east-2.compute.amazonaws.com'
         APP_EC2_KEY_ID = 'ec2'
