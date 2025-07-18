@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     // Authenticate with Docker Hub/ECR
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         bat "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
                         bat "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}-app:latest"
                         bat "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}-proxy:latest"
