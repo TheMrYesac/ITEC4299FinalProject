@@ -6,7 +6,6 @@ pipeline {
         IMAGE_NAME = 'itec4299finalproject'
         APP_EC2_USER = 'ubuntu'
         APP_EC2_HOST = 'ec2-3-134-109-237.us-east-2.compute.amazonaws.com'
-        APP_EC2_KEY_ID = 'ec2'
     }
 
     stages {
@@ -43,13 +42,14 @@ pipeline {
         stage('Deploy to AWS EC2') {
             steps {
                 script{
-                    sshagent(['laptop-ec2-key']) {
-                        def workspacePath = pwd()
-                        bat "ssh ${APP_EC2_USER}@${APP_EC2_HOST} \"mkdir -p /home/ubuntu/itec4299finalproject/\""
+                    sshagent(credentials: ['laptop-ec2-key']) {
+                        def remoteDir = "/home/${APP_EC2_USER}/itec4299finalproject"
                         
-                        bat "scp -i \"${workspacePath}/docker-compose-deploy.yml' ubuntu@ec2-3-134-109-237.us-east-2.compute.amazonaws.com:/home/ubuntu/itec4299finalproject/"
+                        bat "ssh ${APP_EC2_USER}@${APP_EC2_HOST} \"mkdir -p ${remoteDir}\""
+                        
+                        bat "scp \"${workspace}/docker-compose-deploy.yml\' ${APP_EC2_USER}@${APP_EC2_HOST}"${remoteDir}/"
                 
-                        bat "ssh ${APP_EC2_USER}@${APP_EC2_HOST} \"cd /home/ubuntu/itec4299finalproject/ && docker-compose -f docker-compose-deploy.yml pull && docker-compose -f docker-compose-deploy.yml up -d --remove-orphans\""
+                        bat "ssh ${APP_EC2_USER}@${APP_EC2_HOST} \"cd ${remoteDir} && docker-compose -f docker-compose-deploy.yml pull && docker-compose -f docker-compose-deploy.yml up -d --remove-orphans\""
             
                     }
             }
