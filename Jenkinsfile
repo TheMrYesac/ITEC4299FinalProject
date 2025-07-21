@@ -47,7 +47,7 @@ pipeline {
                         
                         bat "ssh ${APP_EC2_USER}@${APP_EC2_HOST} \"mkdir -p ${remoteDir}\""
                         
-                        bat "scp \"${workspace}/docker-compose-deploy.yml\' ${APP_EC2_USER}@${APP_EC2_HOST}"${remoteDir}/"
+                        bat "scp \"${workspace}/docker-compose-deploy.yml\" ${APP_EC2_USER}@${APP_EC2_HOST}:${remoteDir}/"
                 
                         bat "ssh ${APP_EC2_USER}@${APP_EC2_HOST} \"cd ${remoteDir} && docker-compose -f docker-compose-deploy.yml pull && docker-compose -f docker-compose-deploy.yml up -d --remove-orphans\""
             
