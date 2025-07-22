@@ -42,7 +42,7 @@ pipeline {
         stage('Deploy to AWS EC2') {
             steps {
                 script{
-                    sshagent(credentials: ['laptop-ec2-key'], agentBin: 'C\\Windows\\System32\\OpenSSH\\ssh-agent.exe') {
+                    sshagent(credentials: ['laptop-ec2-key']) {
                         def remoteDir = "/home/${APP_EC2_USER}/itec4299finalproject"
                         
                         bat "ssh ${APP_EC2_USER}@${APP_EC2_HOST} \"mkdir -p ${remoteDir}\""
